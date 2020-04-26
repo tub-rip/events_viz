@@ -58,8 +58,9 @@ img_timestamps.close()
 """
 
 # %% Read a file of events and write another file with a subset of them
-events_raw = open('slider_depth/events.txt', "r")
 filename_sub = 'slider_depth/events_chunk.txt'
+"""
+events_raw = open('slider_depth/events.txt', "r")
 events_sub = open(filename_sub, "w")
 # t, x, y, pol
 
@@ -70,7 +71,7 @@ for k in range(50000):
     
 events_raw.close()
 events_sub.close()
-
+"""
 
 # %% Read file with a subset of events
 def extract_data(filename):
