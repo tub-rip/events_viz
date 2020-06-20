@@ -115,7 +115,7 @@ fig = plt.figure()
 fig.suptitle('Balance of event polarities')
 #plt.imshow(img, cmap='gray')
 maxabsval = np.amax(np.abs(img))
-plt.imshow(img, cmap='seismic', clim=(-maxabsval,maxabsval))
+plt.imshow(img, cmap='seismic_r', clim=(-maxabsval,maxabsval))
 plt.colorbar()
 plt.show()
 
@@ -131,7 +131,7 @@ for i in range(num_events):
 
 fig = plt.figure()
 fig.suptitle('Histogram of positive events')
-plt.imshow(img_pos)
+plt.imshow(img_pos, cmap='gray_r')
 plt.colorbar()
 plt.show()
 
@@ -152,8 +152,8 @@ for i in range(num_events):
 
 fig = plt.figure()
 fig.suptitle('Last event polarity per pixel')
-#plt.imshow(img, cmap='gray')
-plt.imshow(img, cmap='bwr')
+plt.imshow(img, cmap='gray')
+#plt.imshow(img, cmap='bwr')
 plt.colorbar()
 plt.show()
 
@@ -350,7 +350,7 @@ def createMovie():
 
 # %% Voxel grid
 
-plt.close('all')
+#plt.close('all')
 
 # First, count histogram
 # Input: x,y,timestamp,pol
@@ -423,6 +423,21 @@ ax = fig.gca(projection='3d')
 ax.voxels(g,b,r, hist3d)
 ax.set(xlabel='x', ylabel='time bin', zlabel='y')
 #ax.view_init(azim=-90, elev=-180)
+#ax.view_init(azim=-63, elev=-145)
+plt.show()
+
+# %%
+colors = np.zeros(hist3d.shape + (3,))
+colors[..., 0] = hist3d
+colors[..., 1] = hist3d
+colors[..., 2] = hist3d
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.voxels(g,b,r, hist3d, facecolors=colors)
+ax.set(xlabel='x', ylabel='time bin', zlabel='y')
+#ax.view_init(azim=-90, elev=-180)
+ax.view_init(azim=-63, elev=-145)
 plt.show()
 
 
@@ -473,4 +488,40 @@ ax = fig.gca(projection='3d')
 ax.voxels(g,b,r, hist3d_interp, facecolors=colors)
 ax.set(xlabel='x', ylabel='time bin', zlabel='y')
 #ax.view_init(azim=-90, elev=-180)
+ax.view_init(azim=-63, elev=-145)
+plt.show()
+
+
+
+# %%
+
+hist3d_interp_pol = np.zeros(img.shape+(num_bins,), np.float64)
+for ii in xrange(m-1):
+    tn = (timestamp[ii] - t_min) / dt_cell
+    ti = int(tn)
+    dt = tn - ti
+    # Voting on two adjacent cells
+    hist3d_interp_pol[y[ii],x[ii],ti  ] += (1. - dt) * (2*pol[ii]-1)
+    if ti < num_bins-1:
+        hist3d_interp_pol[y[ii],x[ii],ti+1] += dt * (2*pol[ii]-1)
+
+# Checks
+print np.sum(hist3d_interp)
+# Some votes are lost because of the missing last layer
+print np.linalg.norm( hist3d - hist3d_interp)
+
+# %%
+maxabsval = np.amax(np.abs(hist3d_interp_pol))
+colors = np.zeros(hist3d_interp_pol.shape + (3,))
+tmp = (hist3d_interp_pol + maxabsval)/(2*maxabsval)
+colors[..., 0] = tmp
+colors[..., 1] = tmp
+colors[..., 2] = tmp
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.voxels(g,b,r, hist3d_interp_pol, facecolors=colors)
+ax.set(xlabel='x', ylabel='time bin', zlabel='y')
+#ax.view_init(azim=-90, elev=-180)
+ax.view_init(azim=-63, elev=-145)
 plt.show()
