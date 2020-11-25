@@ -340,7 +340,7 @@ createMovie()
 # _____________________________________________________________________________
 # %% Voxel grid
 
-num_bins = 10
+num_bins = 5
 print("Number of time bins = ", num_bins)
 
 t_max = np.amax(np.asarray(timestamp[:m]))
