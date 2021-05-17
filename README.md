@@ -4,7 +4,9 @@
 
 ### Statement of the exercise
 
-See the [jupyter notebook](ex2_events_viz.ipynb). It is best visualized locally, as the images do not show up on GitLab.
+See the [jupyter notebook](ex2_events_viz.ipynb). It is best visualized locally, as the images may not show online. In a terminal, run the command: 
+
+	~/.local/bin/jupyter-notebook ex2_events_viz.ipynb
 
 ### Solution
 
